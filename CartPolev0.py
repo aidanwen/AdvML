@@ -7,8 +7,18 @@ import numpy as np
 import random
 from collections import deque
 
+"""
+As of now, this network doesn not really work. It can 'solve' CartPole, at least,
+according to the criteria established by the OpenAI Gym. But the criteria is
+just to reach a score of 100, which is acctually not difficult to do for a network
+that can't acctually balance the cartpole. Thus, my network has not been able to
+solve this problem thus far.
 
-class CartPoleLSTMAgent():
+The network I used has tanh activation functions, and a mean squared error loss
+function.
+"""
+
+class CartPoleAgent():
     def __init__(self, num_episodes = 10, goal_score = 500, len_epoch = 4, sample_size = 64, gamma = 1.0):
         self.memory = deque(maxlen=100000)
         self.env = gym.make('CartPole-v0')
@@ -42,10 +52,6 @@ class CartPoleLSTMAgent():
         y_train = np.vstack(y)
         self.model.fit(x_train, y_train, batch_size=len(x_train))
 
-        # self.model.save_weights('model_weights.h5')
-        # check that you are passing in the right observations. is reshape working right, etc.
-
-
     def run_episode(self):
         state = self.env.reset().reshape(1,4)
         total_reward = 0
@@ -76,5 +82,5 @@ class CartPoleLSTMAgent():
                 print('Iteration {}, Average Reward: {}'.format(iter, reward/self.num_episodes))
                 self.train()
 
-agent = CartPoleLSTMAgent()
+agent = CartPoleAgent()
 agent.run()
