@@ -6,6 +6,42 @@ from keras.optimizers import Adam
 import numpy as np
 import random
 
+"""
+Pseudocode:
+
+Create Random Population
+Create 50 units
+Run for each population
+Select group with the highest score
+Ready Next Group – Create 3 groups:
+Top group x
+Crossovers of Top group, randomly selected .8x
+Mutations of the Top group ½ x
+Mutations of crossovers .2x
+Go to 2
+
+Pick top 30
+x = 20
+Crossover:
+Create x (20) pairs from top
+For each weight/bias, randomly pick from 2
+
+
+
+Network Dimensions (example):
+
+
+Input: 4
+Dense: 4
+Dense: 4
+Output: 2  (Dense)
+
+#Weights = 4*4+4*4+4*2 = 40
+#Biases = 4+4+4+2 = 14
+Total: 54
+
+"""
+
 
 class CartPoleEvolutionAgent():
     def __init__(self, num_episodes = 10, goal_score = 500, eval_num = 50):
