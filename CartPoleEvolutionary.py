@@ -53,12 +53,13 @@ class CartPoleEvolutionAgent():
                 state = next_state
             weights.append(total_reward)
 
-    def select(self):
+    def evolve(self):
+        select = np.sort(self.memory)[:30]
+        for i in range(0,20):
+            for j in range()
 
-
-    def train:
-
-
+        for i in range(0,10):
+            pass
 
     def getAction(self, state):
         return self.env.action_space.sample() if (np.random.random() <= 0.1) else np.argmax(self.model.predict(state.reshape(1,4)))

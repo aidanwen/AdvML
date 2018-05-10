@@ -35,7 +35,7 @@ class CartPoleAgent():
         self.model.add(Dense(input_dim=4, units=24, activation = 'tanh'))
         self.model.add(Dense(units=48, activation = 'tanh'))
         self.model.add(Dense(units=2, activation='linear'))
-        self.model.compile(loss='mse',optimizer=Adam(lr=0.01,decay=0.001))
+        self.model.compile(loss='mse',optimizer=Adam(lr=0.1,decay=0.001))
 
     def getAction(self, state):
         return self.env.action_space.sample() if (np.random.random() <= 0.1) else np.argmax(self.model.predict(state.reshape(1,4)))
