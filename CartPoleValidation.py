@@ -52,7 +52,7 @@ class CartPoleEvolutionAgent():
         self.mutate_chance = mutate_chance
         self.top_select = int(eval_num * top_select_ratio)
         self.createModel()
-        self.memory = self.getInitWeights(eval_num)
+        self.memory = self.getRandWeights(eval_num)
 
 
     def createModel(self):
@@ -61,7 +61,7 @@ class CartPoleEvolutionAgent():
         self.model.add(Dense(units=4))
         self.model.add(Dense(units=2)) # these don't need activation
 
-    def getInitWeights(self,num):
+    def getRandWeights(self,num):
         base_weights = self.preprocessWeights(self.model.get_weights())
         return [[((-2) * np.random.random_sample(layer.shape) + 1) for layer in base_weights] for iter in range(num)]
 
@@ -95,52 +95,14 @@ class CartPoleEvolutionAgent():
         return scores
 
 
-    def evolve(self):
-        select = np.sort(self.memory_scores)[:(self.eval_num-self.top_select)]
-        new_memory = []
-
-        for i in range(0, self.top_select):
-            new_memory.append(self.memory[int(self.memory_scores[0][0])])
-            new_memory.append(self.memory[int(self.memory_scores[1][0])])
-            new_memory.append(self.memory[int(self.memory_scores[i][0])])
-
-        for i in range(self.eval_num-(3*self.top_select)):
-            weight_pair_index = np.random.choice(np.arange(self.top_select),2,replace=False)
-            weight_pair = list(zip(new_memory[weight_pair_index[0]],new_memory[weight_pair_index[1]]))
-            new_memory.append([layer_pair[np.random.randint(2)] for layer_pair in weight_pair])
-
-        for weights in new_memory:
-            for layer in weights:
-                for node in layer:
-                    if (np.random.rand() <= self.mutate_chance):
-                        node = np.random.rand(1) * 2 -1
-        self.memory = new_memory
-        self.memory_scores = []
-
     def run(self):
-        iter = 0
-        solved = False
-        while not solved:
-            iter += 1
-            scores = self.runAgents()
-            mean_score = np.mean(scores)
-            if mean_score > self.goal_score:
-                print('Done!')
-                solved = True
-            else:
-                print('Iteration {}, average score of {}, (max {})'.format(iter,mean_score,max(scores)))
-                self.evolve()
-
-        print('Animating 2000 steps of the best agent, or until done')
-        best_weights = self.memory[self.memory_scores[np.argmax(self.memory_scores)][0]]
-        self.model.set_weights(self.unprocessWeights(best_weights))
-        while (not done) and t < 2000:
-            self.env.render()
-            action = np.argmax(self.model.predict(state.reshape(1,4)))
-            next_state, reward, done, _ = self.env.step(action)
-            total_reward += reward
-            state = next_state
-        print(reward)
+        scores = self.runAgents()
+        mean_score = np.mean(scores)
+        if mean_score > self.goal_score:
+            print('Done!')
+            solved = True
+        else:
+            print('Average score of {}, (max {})'.format(mean_score,max(scores)))
 
 
 
